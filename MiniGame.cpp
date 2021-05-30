@@ -6,16 +6,17 @@ const int WindowWidth  = 1400,
 
 void MoveBall (int* x, int* y, int* x1, int* y1, int* vx, int* vy, int* dt, int r);
 void Rectangle (int* x, int* y);
+void GameOverText ();
 
 int main ()
     {
     txCreateWindow (WindowWidth, WindowHeight);
     txClear ();
 
-    txBegin ();
     int x = -50, x1 = 100, vx = 5,  r = 20,
         y = 600, y1 = 100, vy = 3, dt =  1;
 
+    txBegin ();
     while (y1 <= WindowHeight + r)
         {
         txSetFillColor (TX_WHITE);
@@ -26,6 +27,9 @@ int main ()
 
         txSleep (SleepTime);
         }
+
+    GameOverText ();
+    txEnd ();
     }
 
 void MoveBall (int* x, int* y, int* x1, int* y1, int* vx, int* vy, int* dt, int r)
@@ -81,3 +85,19 @@ void Rectangle (int* x, int* y)
     if (txGetAsyncKeyState (VK_LEFT))  *x -= 30;
     }
 
+void GameOverText ()
+    {
+    txSetTextAlign (TA_CENTER);
+    txSelectFont ("Arial Black", 200);
+
+    int CenterX = WindowWidth/2,
+        CenterY = WindowHeight/2;
+
+    int textSizeX = txGetTextExtentX ("GAME OVER"),
+        textSizeY = txGetTextExtentY ("GAME OVER");
+
+    txSetColor (TX_RED);
+
+    txDrawText (CenterX - textSizeX/2, CenterY - textSizeY/2,
+                CenterX + textSizeX/2, CenterY + textSizeY/2, "GAME OVER");
+    }

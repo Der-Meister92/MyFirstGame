@@ -4,8 +4,16 @@ const int WindowWidth  = 1400,
           WindowHeight = 700,
           SleepTime    = 1;
 
-void MoveBall (int* x, int* y, int* x1, int* y1, int* vx, int* vy, int* dt, int r);
-void Rectangle (int* x, int* y);
+struct Ball
+    {int x,  y,
+         x1, y1,
+         vx, vy,
+         dt, r;
+
+    void MoveBall ();
+    void Rectangle ();
+    };
+
 void GameOverText ();
 
 int main ()
@@ -13,22 +21,20 @@ int main ()
     txCreateWindow (WindowWidth, WindowHeight);
     txClear ();
 
-    int x = -50, x1 = 100, vx = 5,  r = 60,
-        y = 600, y1 = 100, vy = 3, dt =  1;
+    Ball ball1 = {0, 600, 100, 100, 5, 3, 1, 60};
 
     HDC Background  = txLoadImage ("Background.bmp");
 
     txBegin ();
-    while (y1 <= WindowHeight + r)
+    while (ball1.y1 <= WindowHeight + ball1.r)
         {
-
         txSetFillColor (TX_WHITE);
         txClear ();
 
         txBitBlt  (txDC(), 0, 0, WindowWidth, WindowHeight, Background, 0, 0);
 
-        MoveBall (&x, &y, &x1, &y1, &vx, &vy, &dt, 40);
-        Rectangle (&x, &y);
+        ball1.MoveBall ();
+        ball1.Rectangle ();
 
         txSleep (SleepTime);
         }
@@ -39,65 +45,65 @@ int main ()
     txEnd ();
     }
 
-void MoveBall (int* x, int* y, int* x1, int* y1, int* vx, int* vy, int* dt, int r)
+void Ball::MoveBall ()
     {
     txSetColor (RGB (218, 165, 32));
     txSetFillColor (RGB (218, 165, 32));
 
-    txCircle (*x1, *y1, r);
+    txCircle (x1, y1, r);
 
-    *x1 += *vx * (*dt);
-    *y1 -= *vy * (*dt);
+    x1 += vx * dt;
+    y1 -= vy * dt;
 
-    if (*x1 > WindowWidth - 300  - r)
+    if (x1 > WindowWidth - 300  - r)
         {
-        *vx = - *vx;
-        *x1 = *x1 - 2 * (*x1 - WindowWidth + 300  + r);
+        vx = - vx;
+        x1 = x1 - 2 * (x1 - WindowWidth + 300  + r);
 
         txPlaySound ("Wall.wav");
         }
 
-    if (*x1 < 0 + 300 + r)
+    if (x1 < 0 + 300 + r)
         {
-        *vx = - *vx;
-        *x1 = *x1 - 2 * (*x1 - 300 - r);
+        vx = - vx;
+        x1 = x1 - 2 * (x1 - 300 - r);
 
         txPlaySound ("Wall.wav");
         }
 
-    if (*x1 <= *x + 140 && *x <= *x1 && *y - r <= *y1)
+    if (x1 <= x + 140 && x <= x1 && y - r <= y1)
         {
-        *vy = - *vy;
-        *y1 = *y  - r;
+        vy = - vy;
+        y1 = y  - r;
 
         txPlaySound ("Point.wav");
         }
 
-    if (*y1 < 0 + r)
+    if (y1 < 0 + r)
         {
-        *vy = - *vy;
-        *y1 = *y1 - 2 * (*y1 - r);
+        vy = - vy;
+        y1 = y1 - 2 * (y1 - r);
 
         txPlaySound ("Wall.wav");
         }
 
-    if (txGetAsyncKeyState ('1')) *dt = 1;
-    if (txGetAsyncKeyState ('2')) *dt = 2;
-    if (txGetAsyncKeyState ('3')) *dt = 3;
+    if (txGetAsyncKeyState ('1')) dt = 1;
+    if (txGetAsyncKeyState ('2')) dt = 2;
+    if (txGetAsyncKeyState ('3')) dt = 3;
     }
 
-void Rectangle (int* x, int* y)
+void Ball::Rectangle ()
     {
     txSetColor (RGB (218, 165, 32));
     txSetFillColor (RGB (218, 165, 32));
 
-    txRectangle (*x, *y, *x + 140, *y + 40);
+    txRectangle (x, y, x + 140, y + 40);
 
-    if (*x + 140 > WindowWidth - 300) *x = WindowWidth - 140 - 300;
-    if (*x < 0 + 300) *x = 0 + 300;
+    if (x + 140 > WindowWidth - 300) x = WindowWidth - 140 - 300;
+    if (x < 0 + 300) x = 0 + 300;
 
-    if (txGetAsyncKeyState (VK_RIGHT)) *x += 30;
-    if (txGetAsyncKeyState (VK_LEFT))  *x -= 30;
+    if (txGetAsyncKeyState (VK_RIGHT)) x += 30;
+    if (txGetAsyncKeyState (VK_LEFT))  x -= 30;
     }
 
 void GameOverText ()

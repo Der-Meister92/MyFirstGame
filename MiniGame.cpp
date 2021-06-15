@@ -8,20 +8,23 @@ struct Ball
     {int x,  y,
          x1, y1,
          vx, vy,
-         dt, r;
+         dt, r,
+         k;
 
     void MoveBall ();
     void Rectangle ();
+    void Score ();
     };
 
 void GameOverText ();
+
 
 int main ()
     {
     txCreateWindow (WindowWidth, WindowHeight);
     txClear ();
 
-    Ball ball1 = {0, 600, 100, 100, 5, 3, 1, 60};
+    Ball ball1 = {0, 600, 100, 100, 5, 3, 3, 60, 0};
 
     HDC Background  = txLoadImage ("Background.bmp");
 
@@ -35,6 +38,7 @@ int main ()
 
         ball1.MoveBall ();
         ball1.Rectangle ();
+        ball1.Score ();
 
         txSleep (SleepTime);
         }
@@ -42,7 +46,24 @@ int main ()
     txPlaySound ("GameOver.wav");
     GameOverText ();
 
+    txDeleteDC (Background);
     txEnd ();
+    }
+
+void Ball::Score ()
+    {
+    txSetTextAlign (TA_CENTER);
+    txSelectFont ("Arial Black", 100);
+
+    char score [5] = "";
+    sprintf (score, "%d", k);
+
+    txSetColor (TX_WHITE);
+    txSetFillColor (TX_WHITE);
+    txRectangle (60, 270, 240, 360);
+
+    txSetColor (RGB (218, 165, 32));
+    txDrawText (60, 270, 240, 360, score);
     }
 
 void Ball::MoveBall ()
@@ -77,6 +98,7 @@ void Ball::MoveBall ()
         y1 = y  - r;
 
         txPlaySound ("Point.wav");
+        k+=dt-2;
         }
 
     if (y1 < 0 + r)
@@ -87,9 +109,10 @@ void Ball::MoveBall ()
         txPlaySound ("Wall.wav");
         }
 
-    if (txGetAsyncKeyState ('1')) dt = 1;
-    if (txGetAsyncKeyState ('2')) dt = 2;
-    if (txGetAsyncKeyState ('3')) dt = 3;
+    if (txGetAsyncKeyState ('1')) dt = 3;
+    if (txGetAsyncKeyState ('2')) dt = 4;
+    if (txGetAsyncKeyState ('3')) dt = 5;
+
     }
 
 void Ball::Rectangle ()

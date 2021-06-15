@@ -4,6 +4,8 @@ const int WindowWidth  = 1400,
           WindowHeight = 700,
           SleepTime    = 1;
 
+      HDC Background  = txLoadImage ("Background.bmp");
+
 struct Ball
     {int x,  y,
          x1, y1,
@@ -17,53 +19,14 @@ struct Ball
     };
 
 void GameOverText ();
-
+void MiniGame ();
 
 int main ()
     {
     txCreateWindow (WindowWidth, WindowHeight);
     txClear ();
 
-    Ball ball1 = {0, 600, 100, 100, 5, 3, 3, 60, 0};
-
-    HDC Background  = txLoadImage ("Background.bmp");
-
-    txBegin ();
-    while (ball1.y1 <= WindowHeight + ball1.r)
-        {
-        txSetFillColor (TX_WHITE);
-        txClear ();
-
-        txBitBlt  (txDC(), 0, 0, WindowWidth, WindowHeight, Background, 0, 0);
-
-        ball1.MoveBall ();
-        ball1.Rectangle ();
-        ball1.Score ();
-
-        txSleep (SleepTime);
-        }
-
-    txPlaySound ("GameOver.wav");
-    GameOverText ();
-
-    txDeleteDC (Background);
-    txEnd ();
-    }
-
-void Ball::Score ()
-    {
-    txSetTextAlign (TA_CENTER);
-    txSelectFont ("Arial Black", 100);
-
-    char score [5] = "";
-    sprintf (score, "%d", k);
-
-    txSetColor (TX_WHITE);
-    txSetFillColor (TX_WHITE);
-    txRectangle (60, 270, 240, 360);
-
-    txSetColor (RGB (218, 165, 32));
-    txDrawText (60, 270, 240, 360, score);
+    MiniGame ();
     }
 
 void Ball::MoveBall ()
@@ -96,9 +59,9 @@ void Ball::MoveBall ()
         {
         vy = - vy;
         y1 = y  - r;
+        k+=dt-2;
 
         txPlaySound ("Point.wav");
-        k+=dt-2;
         }
 
     if (y1 < 0 + r)
@@ -112,7 +75,6 @@ void Ball::MoveBall ()
     if (txGetAsyncKeyState ('1')) dt = 3;
     if (txGetAsyncKeyState ('2')) dt = 4;
     if (txGetAsyncKeyState ('3')) dt = 5;
-
     }
 
 void Ball::Rectangle ()
@@ -129,10 +91,26 @@ void Ball::Rectangle ()
     if (txGetAsyncKeyState (VK_LEFT))  x -= 30;
     }
 
+void Ball::Score ()
+    {
+    txSetTextAlign (TA_CENTER);
+    txSelectFont ("Arial Black", 100);
+
+    char score [5] = "";
+    sprintf (score, "%d", k);
+
+    txSetColor (TX_WHITE);
+    txSetFillColor (TX_WHITE);
+    txRectangle (60, 270, 240, 360);
+
+    txSetColor (RGB (218, 165, 32));
+    txDrawText (60, 270, 240, 360, score);
+    }
+
 void GameOverText ()
     {
     txSetTextAlign (TA_CENTER);
-    txSelectFont ("Arial Black", 200);
+    txSelectFont ("Arial Black", 180);
 
     int CenterX = WindowWidth/2,
         CenterY = WindowHeight/2;
@@ -144,4 +122,30 @@ void GameOverText ()
 
     txDrawText (CenterX - textSizeX/2, CenterY - textSizeY/2,
                 CenterX + textSizeX/2, CenterY + textSizeY/2, "GAME OVER");
+    }
+
+void MiniGame ()
+    {
+    Ball ball1 = {0, 600, 100, 100, 5, 3, 3, 60, 0};
+
+    txBegin ();
+    while (ball1.y1 <= WindowHeight + ball1.r)
+        {
+        txSetFillColor (TX_WHITE);
+        txClear ();
+
+        txBitBlt  (txDC(), 0, 0, WindowWidth, WindowHeight, Background, 0, 0);
+
+        ball1.MoveBall ();
+        ball1.Rectangle ();
+        ball1.Score ();
+
+        txSleep (SleepTime);
+        }
+
+    txPlaySound ("GameOver.wav");
+    GameOverText ();
+
+    txDeleteDC (Background);
+    txEnd ();
     }

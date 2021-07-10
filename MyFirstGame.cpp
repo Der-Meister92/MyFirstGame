@@ -89,9 +89,38 @@ void MenuButtons (double CenterX, double CenterY, double ButtonsX, double Button
                               Buttons, ButtonsX, ButtonsY, RGB (250, 249, 244));
             if (txMouseButtons () == 1)
                 {
+                t = 0;
                 while (! txGetAsyncKeyState (VK_ESCAPE))
                     {
                     txBitBlt (txDC (), 0, 0, 0, 0, Control, 0, 0);
+
+                    if (t <= 179)
+                        txTransparentBlt (txDC (), 900, -30 + t*3, CatX, CatY, Cat,
+                                          CatX * (((t / 10) % 2) + 2),   0,        RGB (255, 255, 255));
+
+                    if (179 < t && t <= 259)
+                        txTransparentBlt (txDC (), 900, 530,       CatX, CatY, Cat,
+                                          CatX * (((t - 180) / 20) % 2), 0,        RGB (255, 255, 255));
+
+                    if (259 < t && t <= 299)
+                        txTransparentBlt (txDC (), 900, 530,       CatX, CatY, Cat,
+                                          CatX * (((t - 260) / 10) % 4), CatY * 4, RGB (255, 255, 255));
+
+                    if (299 < t && t <= 379)
+                        txTransparentBlt (txDC (), 900, 530,       CatX, CatY, Cat,
+                                          CatX * (((t - 300) / 10) % 4), CatY * 5, RGB (255, 255, 255));
+
+                    if (379 < t && t <= 449)
+                        txTransparentBlt (txDC (), 900, 530,       CatX, CatY, Cat,
+                                          CatX * 2,                      CatY * 4, RGB (255, 255, 255));
+
+                    if (449 < t && t <= 649)
+                        txTransparentBlt (txDC (), 900, 530 - (t - 449)*3, CatX, CatY, Cat,
+                                          CatX * ((((t - 450) / 10) % 2) + 2), CatY * 2, RGB (255, 255, 255));
+
+                    if (t == 700) t = 0;
+
+                    t++;
                     txSleep (SleepTime);
                     }
                 }
@@ -142,7 +171,7 @@ void MenuButtons (double CenterX, double CenterY, double ButtonsX, double Button
             txTransparentBlt (txDC (), 149 - (t - 509), 540, CatX, CatY, Cat,
                               CatX * ((((t - 510) / 10) % 2) + 2), CatY * 3, RGB (255, 255, 255));
 
-        if (t == 810) t = 0;
+        if (t == 860) t = 0;
 
         t++;
         txSleep (SleepTime);

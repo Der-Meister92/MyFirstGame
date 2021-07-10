@@ -6,17 +6,30 @@ const int WindowWidth  = 1280,
 
 const HDC MainMenu = txLoadImage ("Pictures/Main_menu.bmp");
 const HDC Buttons = txLoadImage ("Pictures/Buttons.bmp");
+const HDC Control  = txLoadImage ("Pictures/Control.bmp");
 const HDC Score  = txLoadImage ("Pictures/Background&Score.bmp");
 const HDC Background  = txLoadImage ("Pictures/Background.bmp");
-const HDC BackToMenu  = txLoadImage ("Pictures/BackToMenu.bmp");
+const HDC BackToMenu  = txLoadImage ("Pictures/PressSpace.bmp");
 const HDC Cat = txLoadImage ("Pictures/Cat.bmp");
 
 void MenuButtons (double CenterX, double CenterY, double ButtonsX, double ButtonsY, double MinXButtons,
                   double MaxXButtons, double MinYNewGame, double MaxYNewGame, double MaxYControl,
                   double MaxYExitGame);
 void Menu ();
+//struct Coordinates
+//    {
+//    int x, y;
+//    };
+//struct Physics
+//    {
+//    int vx, vy, dt;
+//    };
 struct Ball
-    {int x,  y,
+    {
+//    Coordinates Rectangle;
+//    Coordinates Circle;
+//    Physics ball;
+    int x,  y,
          x1, y1,
          vx, vy,
          dt, r,
@@ -78,8 +91,8 @@ void MenuButtons (double CenterX, double CenterY, double ButtonsX, double Button
                 {
                 while (! txGetAsyncKeyState (VK_ESCAPE))
                     {
-                    txSetFillColor (TX_WHITE);
-                    txClear ();
+                    txBitBlt (txDC (), 0, 0, 0, 0, Control, 0, 0);
+                    txSleep (SleepTime);
                     }
                 }
             }
